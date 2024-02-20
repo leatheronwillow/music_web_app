@@ -1,10 +1,24 @@
 import os
 from flask import Flask, request
+from lib.database_connection import get_flask_database_connection
+from lib.album_repo import AlbumRepository
 
 # Create a new Flask app
 app = Flask(__name__)
 
 # == Your Routes Here ==
+@app.route('/albums', methods=['GET'])
+def get_albums():
+    connection = get_flask_database_connection(app)
+    repository = AlbumRepository(connection)
+    albums = repository.all()
+    album_titles = [album.title for album in albums]
+    return ', '.join(album_titles)
+
+@app.route('/albums', methods=['POST'])
+def post_albums():
+    return 'Album added successfully'
+
 
 # == Example Code Below ==
 
